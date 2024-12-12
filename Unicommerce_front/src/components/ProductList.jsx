@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { getAllProducts, searchProducts } from "../api/products"; // Asegúrate de tener esta función en tu API
+import { CartContext } from "../api/CartContext"; // Importa el contexto del carrito
 import { Card, CardContent, CardMedia, Typography, Grid, Container, TextField, Button } from "@mui/material";
 import defaultImage from "../assets/images/default.jpg"; // Asegúrate de tener esta imagen
 
 export function ProductList() {
   const [products, setProducts] = useState([]); // Productos a mostrar
   const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda ingresado por el usuario
+  const { dispatch } = useContext(CartContext); // Accede al dispatch del contexto del carrito
 
   // Cargar todos los productos al inicio
   useEffect(() => {
@@ -28,6 +30,11 @@ export function ProductList() {
     } catch (error) {
       console.error("Error al buscar productos:", error);
     }
+  };
+
+  // Agregar un producto al carrito
+  const handleAddToCart = (product) => {
+    dispatch({ type: "ADD_TO_CART", payload: product }); // Envía la acción al contexto del carrito
   };
 
   return (
@@ -60,6 +67,17 @@ export function ProductList() {
                 <Typography variant="h5" component="div">
                   {product.name}
                 </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Precio: ${product.price}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleAddToCart(product)} // Botón para agregar al carrito
+                  style={{ marginTop: "10px" }}
+                >
+                  Agregar al carrito
+                </Button>
               </CardContent>
             </Card>
           </Grid>
