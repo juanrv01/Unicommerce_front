@@ -1,8 +1,8 @@
-import axios from 'axios'
+import axios from "axios";
 
-const token = localStorage.getItem('token');
-axios.get('http://localhost:8000/orders/', {
+const token = localStorage.getItem("token");
+axios.get("https://unicommerce.onrender.com/orders/", {
   headers: {
-    Authorization: `Bearer ${token}`
-  }
-})
+    Authorization: `Bearer ${token}`,
+  },
+});
