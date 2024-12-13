@@ -60,11 +60,7 @@ function NavBar() {
           <>
             <Button color="inherit" component={Link} to="/register">Register</Button>
             <Button color="inherit" component={Link} to="/login">Login</Button>
-            <IconButton color="inherit" component={Link} to="/cart">
-              <Badge badgeContent={cartItems} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+          
           </>
         ) : (
           <>

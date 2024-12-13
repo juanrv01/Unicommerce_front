@@ -3,9 +3,16 @@ import { ProductList } from '../components/ProductList';
 
 export function Home() {
   return (
-    <div>
-      <h1>Welcome to the E-commerce Site!</h1>
-      <ProductList/>
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1 style={{ 
+        fontSize: '2.5rem', 
+        color: '#333', 
+        fontWeight: 'bold', 
+        marginBottom: '20px',
+      }}>
+        Bienvenido a Unicommerce!
+      </h1>
+      <ProductList />
     </div>
   );
 }

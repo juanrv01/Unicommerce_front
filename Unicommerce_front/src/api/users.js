@@ -44,3 +44,16 @@ export const authenticated_user = async () => {
   });
   return response.data;
 };
+
+export const retrieveUserInfo = async (token) => {
+  try {
+    const response = await axios.get('http://localhost:8000/users/', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

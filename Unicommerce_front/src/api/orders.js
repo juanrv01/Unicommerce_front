@@ -1,5 +1,8 @@
 import axios from 'axios'
 
-export const getAllOrders = () => {
-    return axios.get('http://localhost:8000/orders/')
-}
+const token = localStorage.getItem('token');
+axios.get('http://localhost:8000/orders/', {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})

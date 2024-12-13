@@ -59,12 +59,12 @@ export default function RegisterForm() {
     // Estado para capturar los valores de los inputs
     const [formData, setFormData] = useState({
         username: '',
+        first_Name: '',
+        last_Name: '',
         email: '',
         phone: '',
         password: '',
-        confirm_password: '',
-        firstName: '',
-        lastName: '',
+        confirm_password: ''
     });
 
     const [error, setError] = useState(null);
@@ -105,31 +105,31 @@ export default function RegisterForm() {
                 <StyledForm component="form" noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="fname"
-                                name="firstName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                                value={formData.firstName}
-                                onChange={handleChange}
-                            />
+                        <TextField
+                            autoComplete="fname"
+                            name="first_name" // Cambia "firstName" a "first_name"
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="firstName"
+                            label="First Name"
+                            autoFocus
+                            value={formData.first_name}  // Cambia "firstName" a "first_name"
+                            onChange={handleChange}
+                        />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lname"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                            />
+                        <TextField
+                            variant="outlined"
+                            required
+                            fullWidth
+                            id="lastName"
+                            label="Last Name"
+                            name="last_name" // Cambia "lastName" a "last_name"
+                            autoComplete="lname"
+                            value={formData.last_name}  // Cambia "lastName" a "last_name"
+                            onChange={handleChange}
+                        />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -201,10 +201,7 @@ export default function RegisterForm() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                label="I want to receive inspiration, marketing promotions and updates via email."
-                            />
+                            
                         </Grid>
                     </Grid>
                     <StyledSubmit
