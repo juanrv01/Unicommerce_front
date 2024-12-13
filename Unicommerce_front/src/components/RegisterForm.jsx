@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import { registerUser } from '../api/users';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Copyright() {
     return (
@@ -87,6 +88,9 @@ export default function RegisterForm() {
     });
 
     const [error, setError] = useState(null);
+    const [isDisabled, setIsDisabled] = useState(true);
+
+    const captcha = useRef(null);
 
     // Maneja el cambio de los campos de entrada
     const handleChange = (e) => {
@@ -108,6 +112,12 @@ export default function RegisterForm() {
             setError(error.response?.data?.detail || 'Error al registrar el usuario');
         }
     };
+
+    const onChange = () => {
+        if (captcha.current.getValue()) {
+            setIsDisabled(!isDisabled)
+        }
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -210,11 +220,19 @@ export default function RegisterForm() {
                             />
                         </Grid>
                     </Grid>
+                    <div className='recaptcha'>
+                        <ReCAPTCHA
+                            ref={captcha}
+                            sitekey="6LdLYJoqAAAAAKngYMW0qdRKhcjfInogSTouZZhY"
+                            onChange={onChange}
+                        />
+                    </div>
                     <StyledSubmit
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        disabled={isDisabled}
                     >
                         Sign Up
                     </StyledSubmit>
