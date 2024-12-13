@@ -218,7 +218,7 @@ export default function RegisterForm() {
                     <div className='recaptcha'>
                         <ReCAPTCHA
                             ref={captcha}
-                            sitekey="6LdLYJoqAAAAAKngYMW0qdRKhcjfInogSTouZZhY"
+                            sitekey="6LdLYJoqAAAAAG2374sQ7RPYqr-hMBA8xIMajjYF"
                             onChange={onChange}
                         />
                     </div>
