@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { getAllProducts, searchProducts } from "../api/products";
 import { addToCart } from "../api/cart"; // Importa la función para agregar al carrito
 import { Card, CardContent, CardMedia, Typography, Grid, Container, TextField, Button } from "@mui/material";
-import defaultImage from "../assets/images/default.jpg"; 
+import defaultImage from "../assets/images/default.jpg";
 
 export function ProductList() {
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function ProductList() {
               <CardMedia
                 component="img"
                 height="200"
-                image={product.images.length > 0 ? product.images[0].image_url : defaultImage}
+                image={product.image ? product.image : defaultImage}
                 alt={product.name}
               />
               <CardContent>
