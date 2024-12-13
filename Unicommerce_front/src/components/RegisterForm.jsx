@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import { registerUser } from '../api/users';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Copyright() {
     return (
@@ -79,7 +80,7 @@ export default function RegisterForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null); // Reiniciar error antes de la solicitud
-    
+
         try {
             // Primero registra al usuario
             const response = await registerUser(formData);
@@ -89,7 +90,17 @@ export default function RegisterForm() {
             setError(error.response?.data?.detail || 'Error al registrar el usuario');
         }
     };
-    
+
+    const captcha = useRef(null);
+
+    const [isDisabled, setIsDisabled] = useState(true);
+
+    const onChange = () => {
+        if (captcha.current.getValue()) {
+            setIsDisabled(!isDisabled)
+        }
+    }
+
 
     return (
         <Container component="main" maxWidth="xs">
@@ -105,31 +116,31 @@ export default function RegisterForm() {
                 <StyledForm component="form" noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
-                        <TextField
-                            autoComplete="fname"
-                            name="first_name" // Cambia "firstName" a "first_name"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="firstName"
-                            label="First Name"
-                            autoFocus
-                            value={formData.first_name}  // Cambia "firstName" a "first_name"
-                            onChange={handleChange}
-                        />
+                            <TextField
+                                autoComplete="fname"
+                                name="first_name" // Cambia "firstName" a "first_name"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="firstName"
+                                label="First Name"
+                                autoFocus
+                                value={formData.first_name}  // Cambia "firstName" a "first_name"
+                                onChange={handleChange}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                        <TextField
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="lastName"
-                            label="Last Name"
-                            name="last_name" // Cambia "lastName" a "last_name"
-                            autoComplete="lname"
-                            value={formData.last_name}  // Cambia "lastName" a "last_name"
-                            onChange={handleChange}
-                        />
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="lastName"
+                                label="Last Name"
+                                name="last_name" // Cambia "lastName" a "last_name"
+                                autoComplete="lname"
+                                value={formData.last_name}  // Cambia "lastName" a "last_name"
+                                onChange={handleChange}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -201,14 +212,22 @@ export default function RegisterForm() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            
+
                         </Grid>
                     </Grid>
+                    <div className='recaptcha'>
+                        <ReCAPTCHA
+                            ref={captcha}
+                            sitekey="6LdLYJoqAAAAAKngYMW0qdRKhcjfInogSTouZZhY"
+                            onChange={onChange}
+                        />
+                    </div>
                     <StyledSubmit
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        disabled={isDisabled}
                     >
                         Sign Up
                     </StyledSubmit>
