@@ -1,51 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Card, CardContent, Typography, CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('/api/orders')
       .then(response => {
-        console.log('Response data:', response.data); // Inspecciona la respuesta
         if (response.data.orders) {
-          setOrders(response.data.orders); // Accede a la lista de órdenes
+          setOrders(response.data.orders);
         }
       })
       .catch(error => {
         console.error('Error fetching orders:', error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
+  if (loading) {
+    return <CircularProgress />;
+  }
+
   return (
-    <div>
-      <h2>Historial de Órdenes</h2>
-      <ul>
-        {Array.isArray(orders) && orders.length > 0 ? (
-          orders.map(order => (
-            <li key={order.id}>
-              <p>Orden ID: {order.id}</p>
-              <p>Fecha: {new Date(order.created_at).toLocaleDateString()}</p>
-              <p>Total: {order.order_price}</p>
-              <p>Productos:</p>
-              <ul>
-                {order.products.map(product => (
-                  <li key={product.id}>
-                    <p>Nombre: {product.name}</p>
-                    <p>Cantidad: {product.quantity}</p>
-                    <p>Precio Total: {product.Totalprice}</p>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="div">
+          Historial de Órdenes
+        </Typography>
+        {orders.length > 0 ? (
+          <List>
+            {orders.map(order => (
+              <ListItem key={order.id} alignItems="flex-start">
+                <ListItemText
+                  primary={`Orden ID: ${order.id}`}
+                  secondary={
+                    <>
+                      <Typography variant="body2" color="text.secondary">
+                        Fecha: {new Date(order.created_at).toLocaleDateString()}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Total: ${order.order_price.toFixed(2)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Productos:
+                      </Typography>
+                      <List>
+                        {order.products.map(product => (
+                          <ListItem key={product.id}>
+                            <ListItemText
+                              primary={`${product.name} - Cantidad: ${product.quantity}`}
+                              secondary={`Precio Total: $${product.Totalprice.toFixed(2)}`}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
         ) : (
-          <p>No hay órdenes disponibles.</p>
+          <Typography>No hay órdenes disponibles.</Typography>
         )}
-      </ul>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
-
 
 export default OrderHistory;

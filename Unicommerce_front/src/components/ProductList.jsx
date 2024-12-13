@@ -1,15 +1,13 @@
-import { useEffect, useState, useContext } from "react";
-import { getAllProducts, searchProducts } from "../api/products"; // Asegúrate de tener esta función en tu API
-import { CartContext } from "../api/CartContext"; // Importa el contexto del carrito
+import { useEffect, useState } from "react";
+import { getAllProducts, searchProducts } from "../api/products";
+import { addToCart } from "../api/cart"; // Importa la función para agregar al carrito
 import { Card, CardContent, CardMedia, Typography, Grid, Container, TextField, Button } from "@mui/material";
-import defaultImage from "../assets/images/default.jpg"; // Asegúrate de tener esta imagen
+import defaultImage from "../assets/images/default.jpg"; 
 
 export function ProductList() {
-  const [products, setProducts] = useState([]); // Productos a mostrar
-  const [searchTerm, setSearchTerm] = useState(""); // Término de búsqueda ingresado por el usuario
-  const { dispatch } = useContext(CartContext); // Accede al dispatch del contexto del carrito
+  const [products, setProducts] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Cargar todos los productos al inicio
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -22,37 +20,38 @@ export function ProductList() {
     loadProducts();
   }, []);
 
-  // Manejar la búsqueda al hacer clic en el botón
   const handleSearch = async () => {
     try {
-      const res = await searchProducts(searchTerm); // Llama a la API con el término de búsqueda
-      setProducts(res.data); // Actualiza los productos mostrados con los resultados
+      const res = await searchProducts(searchTerm);
+      setProducts(res.data);
     } catch (error) {
       console.error("Error al buscar productos:", error);
     }
   };
 
-  // Agregar un producto al carrito
-  const handleAddToCart = (product) => {
-    dispatch({ type: "ADD_TO_CART", payload: product }); // Envía la acción al contexto del carrito
+  const handleAddToCart = async (product) => {
+    try {
+      await addToCart(product.id, 1); // Agrega el producto al carrito usando la API
+      alert(`${product.name} ha sido añadido al carrito`);
+    } catch (error) {
+      console.error("Error al agregar producto al carrito:", error);
+    }
   };
 
   return (
     <Container>
-      {/* Barra de búsqueda con botón */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
         <TextField
           label="Buscar productos"
           variant="outlined"
           fullWidth
-          onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <Button variant="contained" color="primary" onClick={handleSearch}>
           Buscar
         </Button>
       </div>
 
-      {/* Lista de productos */}
       <Grid container spacing={4}>
         {products.map((product) => (
           <Grid item key={product.id} xs={12} sm={6} md={4}>
@@ -73,7 +72,7 @@ export function ProductList() {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleAddToCart(product)} // Botón para agregar al carrito
+                  onClick={() => handleAddToCart(product)}
                   style={{ marginTop: "10px" }}
                 >
                   Agregar al carrito

@@ -1,14 +1,20 @@
 import React from 'react';
 import OrderHistory from '../components/OrderHistory';
+import UserDetails from '../components/UserDetails';
+import { Grid, Container } from '@mui/material';
 
 function UserInfo() {
   return (
-    <div>
-      <h2>User Information</h2>
-      <p>Username: John Doe</p>
-      <p>Email: johndoe@example.com</p>
-      <OrderHistory />
-    </div>
+    <Container>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <UserDetails />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <OrderHistory />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
