@@ -1,5 +1,4 @@
-import React from 'react';
-import Avatar from '@mui/material/Avatar';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -12,13 +11,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
+import { registerUser } from '../api/users';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
-                Your Website
+                Unicommerce
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -76,6 +76,39 @@ const StyledSubmit = styled(Button)(({ theme }) => ({
 export default function RegisterForm() {
     //const classes = useStyles();
 
+    // Estado para capturar los valores de los inputs
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        phone: '',
+        password: ''
+    });
+
+    const [error, setError] = useState(null);
+
+    // Maneja el cambio de los campos de entrada
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Envía la solicitud POST al servidor para registrar al usuario
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null); // Reiniciar error antes de la solicitud
+
+        try {
+            const response = await registerUser(formData);
+            alert('Usuario registrado con éxito');
+            // Redirige al usuario a la página de inicio de sesión
+            window.location.href = '/login';
+        } catch (error) {
+            setError(error.response?.data?.detail || 'Error al registrar el usuario');
+        }
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -86,7 +119,8 @@ export default function RegisterForm() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <StyledForm component="form" noValidate>
+                {error && <Typography color="error">{error}</Typography>}
+                <StyledForm component="form" noValidate onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -98,6 +132,8 @@ export default function RegisterForm() {
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
+                                value={formData.firstName}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -109,6 +145,20 @@ export default function RegisterForm() {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="userName"
+                                label="Username"
+                                name="userName"
+                                value={formData.username}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -118,8 +168,25 @@ export default function RegisterForm() {
                                 fullWidth
                                 id="email"
                                 label="Email Address"
+                                type="email"
                                 name="email"
                                 autoComplete="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="pNumber"
+                                label="Phone Number"
+                                type="tel"
+                                name="pNumber"
+                                autoComplete="tel"
+                                value={formData.phone}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -132,6 +199,8 @@ export default function RegisterForm() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                value={formData.password}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -151,7 +220,7 @@ export default function RegisterForm() {
                     </StyledSubmit>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/login" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

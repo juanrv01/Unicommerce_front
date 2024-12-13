@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+{/*import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { authenticated_user, login, logout, register } from '../api/users';
@@ -60,4 +60,4 @@ export const AuthProvider = ({ children }) => {
     );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);  */}

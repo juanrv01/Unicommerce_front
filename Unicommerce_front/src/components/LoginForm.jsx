@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -11,13 +11,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Container from '@mui/material/Container';
+import { loginUser } from '../api/users';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
-                Your Website
+                Unicommerce
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -25,25 +26,6 @@ function Copyright() {
     );
 }
 
-{/*const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(1),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-})); */}
 
 const StyledPaper = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(8),
@@ -75,6 +57,37 @@ const StyledSubmit = styled(Button)(({ theme }) => ({
 export default function LoginForm() {
     //const classes = useStyles();
 
+    // Estado para capturar los valores de los inputs
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const [error, setError] = useState(null);
+
+    // Maneja el cambio de los campos de entrada
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Envía la solicitud POST al servidor para iniciar sesión
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);  // Reiniciar error antes de la solicitud
+
+        try {
+            const response = await loginUser(formData);
+            alert('Login exitoso');
+            // Guardar el token en el localStorage o en un contexto
+            localStorage.setItem('token', response.access);  // Suponiendo que el token está en 'access'
+            // Redirigir al usuario a la página principal
+            window.location.href = '/';
+        } catch (error) {
+            setError(error.response?.data?.detail || 'Error al iniciar sesión');
+        }
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -85,7 +98,8 @@ export default function LoginForm() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <StyledForm component="form" noValidate>
+                {error && <Typography color="error">{error}</Typography>}
+                <StyledForm component="form" noValidate onSubmit={handleSubmit}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -96,6 +110,8 @@ export default function LoginForm() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        value={formData.email}
+                        onChange={handleChange}
                     />
                     <TextField
                         variant="outlined"
@@ -107,6 +123,8 @@ export default function LoginForm() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        value={formData.password}
+                        onChange={handleChange}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -127,7 +145,7 @@ export default function LoginForm() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/register" variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>
